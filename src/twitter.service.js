@@ -33,7 +33,7 @@ function listarTweetsHitBRA(userId) {
   } else {
     try {
       return Promise.resolve(require('./../tweets.json'));
-    } catch(e) {
+    } catch (e) {
       const erro = '*** Atenção, seu JSON pode estar inválido ou você apagou ou renomeou o arquivo "tweets.json" da sua pasta raíz!! ***';
       return Promise.reject(erro);
     }
