@@ -179,10 +179,10 @@ const server = app.listen(3000, () => {
   console.log('Servidor iniciado');
 
   DbService.conectar({
-    host: 'localhost', 
-    porta: 3306, 
-    banco: 'pet_shop', 
-    usuario: 'root', 
+    host: 'localhost',
+    porta: 3306,
+    banco: 'pet_shop',
+    usuario: 'root',
     senha: '123456'
   })
     .then(() => {
@@ -199,6 +199,68 @@ const server = app.listen(3000, () => {
       TwitterService.listarTweetsHitBRA()
         .then(tweets => {
           console.log(`Recebido ${tweets.length} para processar`);
+          var twi = 'hackathonhitbra';
+
+          for (let tweet of tweets) {
+
+            if (!tweet.hashtags.includes(twi)) {
+              throw new Error('hashtag invalida');
+            }
+            else {
+              var texto = tweet.texto;
+              texto = texto.replace("#hackathonhitbra", '');
+
+              texto = texto.trim();
+
+              var empresa = texto.substr(0, texto.indexOf(' '));
+
+              texto = texto.replace(empresa, '');
+
+              texto = texto.trim();
+
+              var tipoEv = texto.substr(0, texto.indexOf(' '));
+
+              texto = texto.replace(tipoEv, '');
+
+              texto = texto.trim();
+
+              var data_evento = texto.substr(0, texto.indexOf(' '));
+
+              texto = texto.replace(data_evento, '');
+
+              texto = texto.trim();
+
+              var hora = texto.substr(0, texto.indexOf(' '));
+
+              texto = texto.replace(hora, '');
+              texto = texto.trim();
+
+              var descricao = texto.substr(0, texto.indexOf('*'));
+
+              texto = texto.replace(descricao, '');
+              texto = texto.trim();
+
+              var pessoas = texto.substr(0, texto.indexOf(''));
+
+              texto = texto.replace(pessoas, '');
+              texto = texto.trim();
+
+              DbService.salvarEvento(empresa, tipoEv, data_evento, hora, descricao, pessoas)
+                .then(() => {
+                  console.log('Evento salvo!');
+                })
+                .catch((erro) => {
+                  console.log('Erro!', erro);
+                });
+
+
+              var sql = "INSERT INTO EVENTO (empresa,tipoEv,data_evento,hora,descricao) VALUES (empresa,tipoEv,data_evento,hora,descricao)"
+            }
+          }
+
+
+
+
           /*
             *** Implemente aqui sua lógica para ler o tweets ***
             
@@ -230,3 +292,7 @@ const server = app.listen(3000, () => {
       server.close();
     });
 });
+
+function funcaoER() {
+  throw new Error('hashtag invalida');
+}
